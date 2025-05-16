@@ -1,0 +1,96 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: #111;
+  color: white;
+}
+
+h1, h2, h3 {
+  color: #fff;
+}
+
+#match-info, #betting-section, #result-section, #commentary-section, #timeline-section {
+  background-color: #222;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+}
+
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#commentary-log {
+  background-color: #333;
+  max-height: 150px;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.4;
+  border-radius: 5px;
+}
+
+/* 타임라인 */
+#timeline-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #555;
+  border-radius: 5px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+#timeline-progress {
+  height: 100%;
+  width: 0%;
+  background-color: gold;
+  transition: width 0.5s ease;
+}
+#timeline-time {
+  font-weight: bold;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* 필드 */
+#field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #006600;
+  height: 120px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+.goal {
+  font-size: 30px;
+  width: 50px;
+  text-align: center;
+}
+.players {
+  position: relative;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+.player {
+  font-size: 26px;
+}
+#ball {
+  position: absolute;
+  top: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  transition: left 0.5s ease;
+}

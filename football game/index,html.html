@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>가상축구 시뮬레이터</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>⚽ 가상축구 시뮬레이터</h1>
+
+  <!-- ✅ 타임라인 -->
+  <div id="timeline-section">
+    <h3>⏱️ 경기 시간</h3>
+    <div id="timeline-bar">
+      <div id="timeline-progress"></div>
+    </div>
+    <p id="timeline-time">0'</p>
+  </div>
+
+  <!-- 경기 필드 -->
+  <div id="field">
+    <div class="goal">🥅</div>
+    <div class="players">
+      <div class="player">🧍‍♂️</div>
+      <div id="ball">⚽</div>
+      <div class="player">🧍‍♂️</div>
+    </div>
+    <div class="goal">🥅</div>
+  </div>
+
+  <!-- 경기 정보 -->
+  <div id="match-info">
+    <h2>다음 경기</h2>
+    <p id="matchup"></p>
+    <p id="odds"></p>
+    <p id="scoreboard">0 : 0</p>
+  </div>
+
+  <!-- 배팅 -->
+  <div id="betting-section">
+    <h3>💰 배팅하기</h3>
+    <p>보유 금액: <span id="money">1000</span>원</p>
+    <label>배팅 금액: <input type="number" id="bet-amount" value="100" /></label><br/>
+    <label>승리할 팀 선택: 
+      <select id="bet-team"></select>
+    </label><br/>
+    <button onclick="placeBet()">배팅하기</button>
+    <p id="betting-status"></p>
+  </div>
+
+  <!-- 결과 -->
+  <div id="result-section">
+    <h3>🏆 경기 결과</h3>
+    <p id="result"></p>
+  </div>
+
+  <!-- 중계 -->
+  <div id="commentary-section">
+    <h3>📣 실시간 중계</h3>
+    <div id="commentary-log"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

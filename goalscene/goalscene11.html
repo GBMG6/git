@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soccer Canvas 3D Style with Camera & Player Movement</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+    }
+    canvas {
+      display: block;
+      background: linear-gradient(to bottom, #2e7d32 70%, #1b5e20 100%);
+    }
+  </style>
+</head>
+<body>
+<canvas id="soccerCanvas"></canvas>
+<script>
+  const canvas = document.getElementById('soccerCanvas');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let cameraOffsetX = 0;
+  let targetOffsetX = 0;
+
+  class Player {
+    constructor(x, y, teamColor) {
+      this.x = x;
+      this.y = y;
+      this.originX = x;
+      this.teamColor = teamColor;
+    }
+
+    update(frame) {
+      this.x = this.originX + Math.sin(frame / 30) * 5;
+    }
+
+    draw() {
+      const x = this.x - cameraOffsetX;
+
+      ctx.beginPath();
+      ctx.ellipse(x, this.y + 18, 14, 6, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.2)';
+      ctx.fill();
+
+      const gradient = ctx.createLinearGradient(x, this.y - 30, x, this.y + 10);
+      gradient.addColorStop(0, this.teamColor);
+      gradient.addColorStop(1, 'black');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(x - 10, this.y - 20, 20, 40);
+
+      const headGradient = ctx.createRadialGradient(x - 3, this.y - 32, 2, x, this.y - 32, 10);
+      headGradient.addColorStop(0, '#fff2d4');
+      headGradient.addColorStop(1, '#fcd5b5');
+      ctx.beginPath();
+      ctx.arc(x, this.y - 30, 10, 0, Math.PI * 2);
+      ctx.fillStyle = headGradient;
+      ctx.fill();
+    }
+  }
+
+  class Ball {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.radius = 8;
+    }
+
+    draw() {
+      const x = this.x - cameraOffsetX;
+
+      ctx.beginPath();
+      ctx.ellipse(x, this.y + 6, 10, 4, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fill();
+
+      const gradient = ctx.createRadialGradient(x - 2, this.y - 2, 2, x, this.y, this.radius);
+      gradient.addColorStop(0, 'white');
+      gradient.addColorStop(1, '#ccc');
+
+      ctx.beginPath();
+      ctx.arc(x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+    }
+  }
+
+  const blueTeam = [];
+  const redTeam = [];
+  const spacingX = canvas.width / 15;
+  const spacingY = canvas.height / 11;
+
+  const formations = {
+    goalkeeper: [[1, 5.5]],
+    defenders: [[3, 2], [3, 4], [3, 7], [3, 9]],
+    midfielders: [[6, 3], [6, 5.5], [6, 8]],
+    forwards: [[9, 2.5], [9, 5.5], [9, 8.5]]
+  };
+
+  Object.entries(formations).forEach(([_, positions]) => {
+    positions.forEach(([gx, gy]) => {
+      blueTeam.push(new Player(gx * spacingX, gy * spacingY, 'blue'));
+      redTeam.push(new Player((16 - gx) * spacingX, gy * spacingY, 'red'));
+    });
+  });
+
+  const ball = new Ball(canvas.width / 2, canvas.height / 2);
+  let frame = 0;
+  let goal = true;
+
+  function drawGoals() {
+    ctx.fillStyle = '#fff';
+    const goalWidth = 10;
+    const goalHeight = 100;
+    const goalY = canvas.height / 2 - goalHeight / 2;
+
+    // Left goal
+    ctx.fillRect(-cameraOffsetX, goalY, goalWidth, goalHeight);
+    // Right goal
+    ctx.fillRect(canvas.width - goalWidth - cameraOffsetX, goalY, goalWidth, goalHeight);
+  }
+
+  function drawField() {
+    ctx.fillStyle = '#2e7d32';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2 - cameraOffsetX, 0);
+    ctx.lineTo(canvas.width / 2 - cameraOffsetX, canvas.height);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2 - cameraOffsetX, canvas.height / 2, 70, 0, Math.PI * 2);
+    ctx.stroke();
+
+    drawGoals();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    cameraOffsetX += (targetOffsetX - cameraOffsetX) * 0.05;
+
+    drawField();
+    blueTeam.forEach(p => { p.update(frame); p.draw(); });
+    redTeam.forEach(p => { p.update(frame); p.draw(); });
+    ball.draw();
+
+    if (frame < 100) {
+      ball.x += 6;
+      ball.y += goal ? 1 : -3;
+      targetOffsetX = ball.x - canvas.width / 2;
+    }
+
+    frame++;
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  setInterval(() => {
+    frame = 0;
+    ball.x = canvas.width / 2;
+    ball.y = canvas.height / 2;
+    goal = !goal;
+    targetOffsetX = 0;
+  }, 3000);
+</script>
+</body>
+</html>
