@@ -1,7 +1,7 @@
 OutFp= None
 OutStr = ""
-
-OutFp = open("C:\\Users\\USER\\Desktop\\파이썬\\Filetest\\data2.txt", "w", encoding="utf-8")
+fName = input("파일명을 입력하세요 : ")
+OutFp = open(fName, "w", encoding="utf-8")
 
 while True :
     OutStr = input("내용 입력 : ")
